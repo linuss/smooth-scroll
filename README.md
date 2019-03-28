@@ -13,7 +13,7 @@ It depends on the [easing functions](https://package.elm-lang.org/packages/elm-c
 * id: The id of the element to scroll to.
 
 ## Example
-```
+```elm
 module Main
 
 import Browser exposing (Document)
