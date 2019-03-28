@@ -1,10 +1,8 @@
-module SmoothScroll exposing (Config, scrollTo, scrollToWithOptions)
-
-import Browser.Dom as Dom
-import Ease
-import Internal.SmoothScroll exposing (animationSteps)
-import Task exposing (Task)
-
+module SmoothScroll exposing
+    ( scrollTo
+    , scrollToWithOptions
+    , Config
+    )
 
 {-|
 
@@ -12,6 +10,22 @@ import Task exposing (Task)
 # scrollTo
 
 @docs scrollTo
+@docs scrollToWithOptions
+@docs Config
+
+-}
+
+import Browser.Dom as Dom
+import Ease
+import Internal.SmoothScroll exposing (animationSteps)
+import Task exposing (Task)
+
+
+{-| Configuration options for smooth scrolling. Has three options:
+
+  - offset: The amount of space in pixels between the element to scroll to and the top of the viewport that is to remain after scrolling
+  - speed: The higher this number, the faster the scrolling!
+  - easing: The easing function to use. Check out the [easing functions](https://package.elm-lang.org/packages/elm-community/easing-functions/latest/) package for more information.
 
 -}
 type alias Config =
@@ -29,11 +43,15 @@ defaultConfig =
     }
 
 
+{-| Scroll to the element with the given id, using the default configuration
+-}
 scrollTo : String -> Task Dom.Error (List ())
 scrollTo =
     scrollToWithOptions defaultConfig
 
 
+{-| Scroll to the element with the given id, using a custom configuration
+-}
 scrollToWithOptions : Config -> String -> Task Dom.Error (List ())
 scrollToWithOptions config id =
     let

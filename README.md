@@ -12,6 +12,8 @@ by default. If you want more control over the scrolling however, you can create 
 * speed: The speed with which the scrolling is to take place. Experiment to find the value that works for you. 100 is the default.
 * easing: The easing function to use. Check out the [easing functions](https://package.elm-lang.org/packages/elm-community/easing-functions/latest/) package for more information. `Ease.outQuint` is the default.
 
+You can then pass this config record to the `scrollToWithOptions` function.
+
 ## Example
 ```elm
 module Example exposing (main)
