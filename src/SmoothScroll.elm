@@ -1,7 +1,8 @@
-module SmoothScroll exposing (scrollTo)
+module SmoothScroll exposing (Config, scrollTo, scrollToWithOptions)
 
 import Browser.Dom as Dom
 import Ease
+import Internal.SmoothScroll exposing (animationSteps)
 import Task exposing (Task)
 
 
@@ -13,33 +14,32 @@ import Task exposing (Task)
 @docs scrollTo
 
 -}
-animationSteps : Int -> Ease.Easing -> Float -> Float -> List Float
-animationSteps speed easing start stop =
-    let
-        diff =
-            abs <| start - stop
-
-        n =
-            Basics.max 1 <| round diff // speed
-
-        weights =
-            List.map (\i -> easing (toFloat i / toFloat n)) (List.range 0 n)
-
-        operator =
-            if start > stop then
-                (-)
-
-            else
-                (+)
-    in
-    List.map (\weight -> operator start (weight * diff)) weights
+type alias Config =
+    { offset : Int
+    , speed : Int
+    , easing : Ease.Easing
+    }
 
 
-scrollTo : Float -> Int -> Ease.Easing -> String -> Task Dom.Error (List ())
-scrollTo offset speed easing id =
+defaultConfig : Config
+defaultConfig =
+    { offset = 12
+    , speed = 200
+    , easing = Ease.outQuint
+    }
+
+
+scrollTo : String -> Task Dom.Error (List ())
+scrollTo =
+    scrollToWithOptions defaultConfig
+
+
+scrollToWithOptions : Config -> String -> Task Dom.Error (List ())
+scrollToWithOptions config id =
     let
         tasks from to =
-            List.map (Dom.setViewport 0) (animationSteps speed easing from (to - offset))
+            List.map (Dom.setViewport 0)
+                (animationSteps config.speed config.easing from (to - toFloat config.offset))
                 |> Task.sequence
     in
     Task.map2 Tuple.pair Dom.getViewport (Dom.getElement id)

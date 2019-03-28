@@ -5,24 +5,25 @@ This library provides a function that allows for smooth scrolling to a DOM eleme
 
 ## Usage
 
-It depends on the [easing functions](https://package.elm-lang.org/packages/elm-community/easing-functions/latest/) package, although it does not use it directly. The `scrollTo` function takes four parameters:
+See the `example` directory for a working example. The `scrollTo` function results in cool scrolling behaviour
+by default. If you want more control over the scrolling however, you can create a `Config` record with the following options:
 
-* offset: The amount of space in pixels between the element to scroll to and the top of the viewport that is to remain after scrolling
-* speed: The speed with which the scrolling is to take place. Experiment to find the value that works for you. 100 is a good starting point.
-* easing: The easing function to use. Check out the [easing functions](https://package.elm-lang.org/packages/elm-community/easing-functions/latest/) package for more information. `Ease.outQuint` is good starting point.
-* id: The id of the element to scroll to.
+* offset: The amount of space in pixels between the element to scroll to and the top of the viewport that is to remain after scrolling. Defaults to 12.
+* speed: The speed with which the scrolling is to take place. Experiment to find the value that works for you. 100 is the default.
+* easing: The easing function to use. Check out the [easing functions](https://package.elm-lang.org/packages/elm-community/easing-functions/latest/) package for more information. `Ease.outQuint` is the default.
 
 ## Example
 ```elm
-module Main
+module Example exposing (main)
 
 import Browser exposing (Document)
 import Browser.Dom as Dom
+import Dict exposing (Dict)
 import Ease
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import String
+import SmoothScroll exposing (scrollTo)
 import Task exposing (Task)
 
 
@@ -48,6 +49,7 @@ type Msg
     = NoOp
     | SmoothScroll String
 
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -55,7 +57,7 @@ update msg model =
             ( model, Cmd.none )
 
         SmoothScroll id ->
-            ( model, Task.attempt (always NoOp) (scrollTo 35 100 Ease.outQuint id) )
+            ( model, Task.attempt (always NoOp) (scrollTo id) )
 
 
 view : Model -> Document Msg
@@ -77,5 +79,4 @@ view model =
             ]
         ]
     }
-
 ```

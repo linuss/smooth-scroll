@@ -41,7 +41,7 @@ update msg model =
             ( model, Cmd.none )
 
         SmoothScroll id ->
-            ( model, Task.attempt (always NoOp) (scrollTo 35 100 Ease.outQuint id) )
+            ( model, Task.attempt (always NoOp) (scrollTo id) )
 
 
 view : Model -> Document Msg
