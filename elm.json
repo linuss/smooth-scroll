@@ -3,7 +3,7 @@
     "name": "linuss/smooth-scroll",
     "summary": "Smooth scrolling animation to a DOM element",
     "license": "BSD-3-Clause",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "exposed-modules": [
         "SmoothScroll"
     ],
