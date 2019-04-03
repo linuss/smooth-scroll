@@ -1,17 +1,23 @@
 module SmoothScroll exposing
-    ( scrollTo
+    ( Config
+    , defaultConfig
+    , scrollTo
     , scrollToWithOptions
-    , Config
     )
 
 {-|
 
 
-# scrollTo
+# Config
+
+@docs Config
+@docs defaultConfig
+
+
+# Scrolling
 
 @docs scrollTo
 @docs scrollToWithOptions
-@docs Config
 
 -}
 
@@ -35,6 +41,18 @@ type alias Config =
     }
 
 
+{-|
+
+    import SmoothScroll
+
+    defaultConfig : Config
+    defaultConfig =
+        { offset = 12
+        , speed = 200
+        , easing = Ease.outQuint
+        }
+
+-}
 defaultConfig : Config
 defaultConfig =
     { offset = 12
@@ -44,6 +62,11 @@ defaultConfig =
 
 
 {-| Scroll to the element with the given id, using the default configuration
+
+    import SmoothScroll
+
+    scrollTo "article"
+
 -}
 scrollTo : String -> Task Dom.Error (List ())
 scrollTo =
@@ -51,6 +74,11 @@ scrollTo =
 
 
 {-| Scroll to the element with the given id, using a custom configuration
+
+    import SmoothScroll
+
+    scrollToWithOptions { defaultConfig | offset = 60 } "article"
+
 -}
 scrollToWithOptions : Config -> String -> Task Dom.Error (List ())
 scrollToWithOptions config id =
