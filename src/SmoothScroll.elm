@@ -75,7 +75,7 @@ scrollTo =
 
 {-| Scroll to the element with the given id, using a custom configuration
 
-    import SmoothScroll
+    import SmoothScroll exposing (defaultConfig)
 
     scrollToWithOptions { defaultConfig | offset = 60 } "article"
 
