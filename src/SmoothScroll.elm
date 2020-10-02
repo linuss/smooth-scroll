@@ -79,7 +79,7 @@ defaultConfig =
 
     import SmoothScroll exposing (scrollToWithOptions, defaultConfig, containerElement)
 
-    scrollToWithOptions { defaultConfig | containerElement = "article-list" } "article-42"
+    scrollToWithOptions { defaultConfig | container = containerElement "article-list" } "article-42"
 
 -}
 containerElement : String -> Container
