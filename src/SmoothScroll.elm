@@ -45,6 +45,8 @@ type alias Config =
     }
 
 
+{-| An internal type for configuring which element to scroll within.
+-}
 type Container
     = DocumentBody
     | InnerNode String
