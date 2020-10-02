@@ -1,6 +1,7 @@
 module SmoothScroll exposing
     ( Config
     , defaultConfig
+    , containerElement
     , scrollTo
     , scrollToWithOptions
     )
@@ -38,10 +39,14 @@ type alias Config =
     { offset : Int
     , speed : Int
     , easing : Ease.Easing
+    , container : Container
     }
 
 
-{-|
+type Container
+    = DocumentBody
+    | InnerNode String
+
 
     import SmoothScroll
 
@@ -50,6 +55,7 @@ type alias Config =
         { offset = 12
         , speed = 200
         , easing = Ease.outQuint
+        , container = DocumentBody
         }
 
 -}
@@ -58,7 +64,20 @@ defaultConfig =
     { offset = 12
     , speed = 200
     , easing = Ease.outQuint
+    , container = DocumentBody
     }
+
+
+{-| Configure which DOM node to scroll inside of
+
+    import SmoothScroll exposing (scrollToWithOptions, defaultConfig, containerElement)
+
+    scrollToWithOptions { defaultConfig | containerElement = "article-list" } "article-42"
+
+-}
+containerElement : String -> Container
+containerElement elementId =
+    InnerNode elementId
 
 
 {-| Scroll to the element with the given id, using the default configuration
@@ -83,10 +102,40 @@ scrollTo =
 scrollToWithOptions : Config -> String -> Task Dom.Error (List ())
 scrollToWithOptions config id =
     let
-        tasks from to =
-            List.map (Dom.setViewport 0)
-                (animationSteps config.speed config.easing from (to - toFloat config.offset))
+        ( getViewport, setViewport ) =
+            case config.container of
+                DocumentBody ->
+                    ( Dom.getViewport, Dom.setViewport 0 )
+
+                InnerNode containerId ->
+                    ( Dom.getViewportOf containerId, Dom.setViewportOf containerId 0 )
+
+        getContainerInfo =
+            case config.container of
+                DocumentBody ->
+                    Task.succeed Nothing
+
+                InnerNode containerId ->
+                    Task.map Just (Dom.getElement containerId)
+
+        scrollTask { scene, viewport } { element } container =
+            let
+                destination =
+                    case container of
+                        Nothing ->
+                            element.y - toFloat config.offset
+
+                        Just containerInfo ->
+                            viewport.y + element.y - toFloat config.offset - containerInfo.element.y
+
+                clamped =
+                    destination
+                        |> min (scene.height - viewport.height)
+                        |> max 0
+            in
+            animationSteps config.speed config.easing viewport.y clamped
+                |> List.map setViewport
                 |> Task.sequence
     in
-    Task.map2 Tuple.pair Dom.getViewport (Dom.getElement id)
-        |> Task.andThen (\( { viewport }, { element } ) -> tasks viewport.y element.y)
+    Task.map3 scrollTask getViewport (Dom.getElement id) getContainerInfo
+        |> Task.andThen identity
