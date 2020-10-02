@@ -13,6 +13,7 @@ module SmoothScroll exposing
 
 @docs Config
 @docs defaultConfig
+@docs containerElement
 
 
 # Scrolling
@@ -28,11 +29,12 @@ import Internal.SmoothScroll exposing (animationSteps)
 import Task exposing (Task)
 
 
-{-| Configuration options for smooth scrolling. Has three options:
+{-| Configuration options for smooth scrolling. Has four options:
 
   - offset: The amount of space in pixels between the element to scroll to and the top of the viewport that is to remain after scrolling
   - speed: The higher this number, the faster the scrolling!
   - easing: The easing function to use. Check out the [easing functions](https://package.elm-lang.org/packages/elm-community/easing-functions/latest/) package for more information.
+  - container: Which element to scroll inside of. Defaults to the document body, but can be configured with [`containerElement`](#containerElement)
 
 -}
 type alias Config =
@@ -48,7 +50,10 @@ type Container
     | InnerNode String
 
 
-    import SmoothScroll
+{-| The default configuration which can be modified
+
+    import Ease
+    import SmoothScroll exposing (defaultConfig)
 
     defaultConfig : Config
     defaultConfig =
@@ -82,7 +87,7 @@ containerElement elementId =
 
 {-| Scroll to the element with the given id, using the default configuration
 
-    import SmoothScroll
+    import SmoothScroll exposing (scrollTo)
 
     scrollTo "article"
 
@@ -94,7 +99,7 @@ scrollTo =
 
 {-| Scroll to the element with the given id, using a custom configuration
 
-    import SmoothScroll exposing (defaultConfig)
+    import SmoothScroll exposing (defaultConfig, scrollToWithOptions)
 
     scrollToWithOptions { defaultConfig | offset = 60 } "article"
 
