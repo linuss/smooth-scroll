@@ -11,6 +11,7 @@ by default. If you want more control over the scrolling however, you can create 
 * offset: The amount of space in pixels between the element to scroll to and the top of the viewport that is to remain after scrolling. Defaults to 12.
 * speed: The speed with which the scrolling is to take place. Experiment to find the value that works for you. 100 is the default.
 * easing: The easing function to use. Check out the [easing functions](https://package.elm-lang.org/packages/elm-community/easing-functions/latest/) package for more information. `Ease.outQuint` is the default.
+* container: Which element to scroll inside of. Defaults to the document body, but can be configured with `containerElement`.
 
 You can then pass this config record to the `scrollToWithOptions` function.
 
